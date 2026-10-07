@@ -1,0 +1,47 @@
+<div *ngIf="mensagemErro" class="alert error">{{ mensagemErro }}</div>
+<div *ngIf="mensagemSucesso" class="alert success">{{ mensagemSucesso }}</div>
+
+<!-- Formulário de Tarefa -->
+<div class="card form-container">
+  <h2>Nova Tarefa</h2>
+  <form (ngSubmit)="salvarTarefa()">
+    <div class="form-group">
+      <label>Título da Tarefa</label>
+      <input type="text" [(ngModel)]="novaTarefa.titulo" name="titulo" required placeholder="Ex: Finalizar Sprint do Squad">
+    </div>
+    <div class="form-group">
+      <label>Descrição Opcional</label>
+      <textarea [(ngModel)]="novaTarefa.descricao" name="descricao" placeholder="O que precisa ser feito?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Data de Vencimento</label>
+      <input type="date" [(ngModel)]="novaTarefa.dataVencimento" name="dataVencimento">
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn primary">{{ editandoTarefa ? 'Atualizar' : 'Salvar Tarefa' }}</button>
+      <button type="button" *ngIf="editandoTarefa" (click)="limparFormTarefa()" class="btn secondary">Cancelar</button>
+    </div>
+  </form>
+</div>
+
+<!-- Lista de Tarefas -->
+<div class="task-list">
+  <h2>Minhas Tarefas Ativas</h2>
+  <div *ngIf="tarefas.length === 0" class="empty-state">Nenhuma tarefa integrada encontrada. Comece criando uma acima!</div>
+
+  <div *ngFor="let t of tarefas" class="card task-item" [class.completed]="t.status === 'Concluída'">
+    <div class="task-content">
+      <h3>{{ t.titulo }}</h3>
+      <p>{{ t.descricao }}</p>
+      <small *ngIf="t.dataVencimento">Prazo: {{ t.dataVencimento | date:'dd/MM/yyyy' }}</small>
+      <span class="badge" [class.done]="t.status === 'Concluída'">{{ t.status }}</span>
+    </div>
+    <div class="task-actions">
+      <button type="button" (click)="alternarConclusao(t)" class="btn success-outline">
+        {{ t.status === 'Concluída' ? 'Refazer' : 'Concluir' }}
+      </button>
+      <button type="button" (click)="editarTarefa(t)" class="btn info-outline">Editar</button>
+      <button type="button" (click)="excluirTarefa(t.id)" class="btn danger-outline">Excluir</button>
+    </div>
+  </div>
+</div>

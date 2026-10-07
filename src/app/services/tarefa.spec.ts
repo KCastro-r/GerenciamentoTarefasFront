@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import { Tarefa } from './tarefa';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TarefaService } from './tarefa'; // Mudamos aqui para importar o Serviço correto
 
-describe('Tarefa', () => {
-  let service: Tarefa;
+describe('TarefaService', () => {
+  let service: TarefaService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Tarefa);
+    TestBed.configureTestingModule({
+      providers: [
+        TarefaService,
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
+    });
+    service = TestBed.inject(TarefaService);
   });
 
   it('should be created', () => {
