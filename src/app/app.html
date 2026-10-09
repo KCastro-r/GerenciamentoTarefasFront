@@ -90,10 +90,14 @@
     </div>
   </div>
 
-<audio id="audioPanico" src="assets/panico.mp3" preload="auto"></audio>
-
-  <button type="button" id="btnPanico" class="btn-panico" title="Botão de Pânico">
-    🚨
+  <button
+    type="button"
+    id="btnPanico"
+    class="btn-panico"
+    [class.panico-ativo]="panicoAtivo"
+    (click)="togglePanico()"
+    [title]="panicoAtivo ? 'Pânico ativado' : 'Botão de Pânico'">
+    {{ panicoAtivo ? '🕊️' : '🚨' }}
   </button>
 
 </div>
