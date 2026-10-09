@@ -3,6 +3,6 @@ export interface Tarefa {
   titulo: string;
   descricao: string;
   dataVencimento: string;
-  status: string;     //Pendente ou Concluída
+  concluida?: boolean;
   usuarioId: number;
 }
