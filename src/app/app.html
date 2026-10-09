@@ -1,93 +1,99 @@
-<header class="main-header">
-  <div class="nav-container">
-    <span class="titulo">Gerenciamento de Tarefas - Squad Nina da Hora</span>
-    <div class="nav-buttons">
-      <button type="button" (click)="abaAtiva = 'cadastro'" class="btn" [class.primary]="abaAtiva === 'cadastro'">Cadastrar Usuária</button>
-      <!-- o painel só aparece depois que existe uma usuária ativa -->
-      <button *ngIf="usuarioLogado" type="button" (click)="abaAtiva = 'tarefas'" class="btn" [class.primary]="abaAtiva === 'tarefas'">Painel de Tarefas</button>
+<div [class.dark-theme]="temaEscuro" class="theme-wrapper">
+  
+  <header class="main-header">
+    <div class="nav-container">
+      <span class="titulo">Gerenciamento de Tarefas</span>
+      <div class="nav-buttons">
+        <button type="button" (click)="alternarTema()" class="btn theme-toggle" title="Alternar Tema">
+          {{ temaEscuro ? '☀️' : '🌙 ' }}
+        </button>
+
+        <button type="button" (click)="abaAtiva = 'cadastro'" class="btn" [class.primary]="abaAtiva === 'cadastro'">Cadastrar Usuária</button>
+        <button *ngIf="usuarioLogado" type="button" (click)="abaAtiva = 'tarefas'" class="btn" [class.primary]="abaAtiva === 'tarefas'">Painel de Tarefas</button>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<div class="container">
-  <!-- Notificações globais -->
-  <div *ngIf="mensagemErro" class="alert error">{{ mensagemErro }}</div>
-  <div *ngIf="mensagemSucesso" class="alert success">{{ mensagemSucesso }}</div>
+  <div class="container">
+ 
+    <div *ngIf="mensagemErro" class="alert error">{{ mensagemErro }}</div>
+    <div *ngIf="mensagemSucesso" class="alert success">{{ mensagemSucesso }}</div>
 
-  <!-- ABA 1: GERENCIAMENTO DE TAREFAS -->
-  <!-- só mostra se houver usuária ativa -->
-  <div *ngIf="usuarioLogado && abaAtiva === 'tarefas'">
-    <p>Usuária ativa: <strong>{{ usuarioLogado.nome }}</strong></p>
+    <!-- ABA DE TAREFAS -->
+    <div *ngIf="usuarioLogado && abaAtiva === 'tarefas'">
+      <p>Usuária ativa: <strong>{{ usuarioLogado.nome }}</strong></p>
 
-    <!-- Formulário de Tarefa -->
-    <div class="card form-container">
-      <h2>{{ editandoTarefa ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
-      <form (ngSubmit)="salvarTarefa()">
-        <div class="form-group">
-          <label>Título da Tarefa</label>
-          <input type="text" [(ngModel)]="novaTarefa.titulo" name="titulo" required placeholder="Ex: Finalizar Sprint do Squad">
+      <div class="card form-container">
+        <h2>{{ editandoTarefa ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
+        <form (ngSubmit)="salvarTarefa()">
+          <div class="form-group">
+            <label>Título da Tarefa</label>
+            <input type="text" [(ngModel)]="novaTarefa.titulo" name="titulo" required placeholder="Ex: Finalizar Sprint">
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="novaTarefa.descricao" name="descricao" placeholder="O que precisa ser feito?"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Data de Vencimento</label>
+            <input type="date" [(ngModel)]="novaTarefa.dataVencimento" name="dataVencimento" required>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn primary">{{ editandoTarefa ? 'Atualizar' : 'Salvar Tarefa' }}</button>
+            <button type="button" *ngIf="editandoTarefa" (click)="limparFormTarefa()" class="btn secondary">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="task-list">
+        <h2>Minhas Tarefas</h2>
+        <div *ngIf="tarefas.length === 0" class="empty-state">Nenhuma tarefa encontrada. Comece criando uma acima!</div>
+
+        <div *ngFor="let t of tarefas" class="card task-item" [class.completed]="t.concluida">
+          <div class="task-content">
+            <h3>{{ t.titulo }}</h3>
+            <p>{{ t.descricao }}</p>
+            <small *ngIf="t.dataVencimento">Prazo: {{ t.dataVencimento | date:'dd/MM/yyyy' }}</small>
+            <span class="badge" [class.done]="t.concluida">{{ t.concluida ? 'Concluída' : 'Pendente' }}</span>
+          </div>
+          <div class="task-actions">
+            <button *ngIf="!t.concluida" type="button" (click)="concluirTarefa(t)" class="btn success-outline">Concluir</button>
+            <button type="button" (click)="editarTarefa(t)" class="btn info-outline">Editar</button>
+            <button type="button" (click)="excluirTarefa(t.id)" class="btn danger-outline">Excluir</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Descrição Opcional</label>
-          <textarea [(ngModel)]="novaTarefa.descricao" name="descricao" placeholder="O que precisa ser feito?"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Data de Vencimento</label>
-          <!-- CORREÇÃO: campo obrigatório, como na API -->
-          <input type="date" [(ngModel)]="novaTarefa.dataVencimento" name="dataVencimento" required>
-        </div>
-        <div class="actions">
-          <button type="submit" class="btn primary">{{ editandoTarefa ? 'Atualizar' : 'Salvar Tarefa' }}</button>
-          <button type="button" *ngIf="editandoTarefa" (click)="limparFormTarefa()" class="btn secondary">Cancelar</button>
-        </div>
-      </form>
+      </div>
     </div>
 
-    <!-- Lista de Tarefas -->
-    <div class="task-list">
-      <h2>Minhas Tarefas</h2>
-      <div *ngIf="tarefas.length === 0" class="empty-state">Nenhuma tarefa encontrada. Comece criando uma acima!</div>
-
-      <!-- CORREÇÃO: "completed" e "done" agora dependem de t.concluida (antes: t.status === 'Concluída') -->
-      <div *ngFor="let t of tarefas" class="card task-item" [class.completed]="t.concluida">
-        <div class="task-content">
-          <h3>{{ t.titulo }}</h3>
-          <p>{{ t.descricao }}</p>
-          <small *ngIf="t.dataVencimento">Prazo: {{ t.dataVencimento | date:'dd/MM/yyyy' }}</small>
-          <span class="badge" [class.done]="t.concluida">{{ t.concluida ? 'Concluída' : 'Pendente' }}</span>
-        </div>
-        <div class="task-actions">
-          <!-- CORREÇÃO: botão só aparece em tarefa pendente e chama o PATCH /concluir.
-               O "Refazer" foi removido porque a API só sabe concluir. -->
-          <button *ngIf="!t.concluida" type="button" (click)="concluirTarefa(t)" class="btn success-outline">Concluir</button>
-          <button type="button" (click)="editarTarefa(t)" class="btn info-outline">Editar</button>
-          <button type="button" (click)="excluirTarefa(t.id)" class="btn danger-outline">Excluir</button>
-        </div>
+    <!-- ABA DE CADASTRO -->
+    <div *ngIf="abaAtiva === 'cadastro'">
+      <div class="card form-container">
+        <h2>Nova Conta de Usuária</h2>
+        <form (ngSubmit)="cadastrarUsuaria()">
+          <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" [(ngModel)]="novoUsuario.nome" name="nomeUsuario" placeholder="Digite seu nome" required>
+          </div>
+          <div class="form-group">
+            <label>E-mail de Acesso</label>
+            <input type="email" [(ngModel)]="novoUsuario.email" name="emailUsuario" placeholder="exemplo@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Senha de Segurança</label>
+            <input type="password" [(ngModel)]="novoUsuario.senha" name="senhaUsuario" placeholder="Mínimo 6 caracteres" required>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn primary">Efetuar Cadastro</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- ABA 2: CADASTRO DE USUÁRIA -->
-  <div *ngIf="abaAtiva === 'cadastro'">
-    <div class="card form-container">
-      <h2>Nova Conta de Usuária</h2>
-      <form (ngSubmit)="cadastrarUsuaria()">
-        <div class="form-group">
-          <label>Nome Completo</label>
-          <input type="text" [(ngModel)]="novoUsuario.nome" name="nomeUsuario" placeholder="Digite seu nome" required>
-        </div>
-        <div class="form-group">
-          <label>E-mail de Acesso</label>
-          <input type="email" [(ngModel)]="novoUsuario.email" name="emailUsuario" placeholder="exemplo@email.com" required>
-        </div>
-        <div class="form-group">
-          <label>Senha de Segurança</label>
-          <input type="password" [(ngModel)]="novoUsuario.senha" name="senhaUsuario" placeholder="Mínimo 6 caracteres" required>
-        </div>
-        <div class="actions">
-          <button type="submit" class="btn primary">Efetuar Cadastro</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<audio id="audioPanico" src="assets/panico.mp3" preload="auto"></audio>
+
+  <button type="button" id="btnPanico" class="btn-panico" title="Botão de Pânico">
+    🚨
+  </button>
+
 </div>

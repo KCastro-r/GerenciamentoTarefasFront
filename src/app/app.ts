@@ -7,46 +7,64 @@ import { UsuarioService } from './services/usuario';
 import { Tarefa } from './models/tarefa';
 import { Usuario } from './models/usuario';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Módulos necessários para ngIf, ngFor e formulários
+  imports: [CommonModule, FormsModule],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
-  // Controle de Abas
-  // CORREÇÃO: começa no cadastro, porque ainda não há usuária ativa.
   abaAtiva: 'tarefas' | 'cadastro' = 'cadastro';
-
-  // CORREÇÃO: no lugar do "usuarioLogadoId = 1" fixo (usuária de teste sem senha),
-  // guardamos a usuária que acabou de se cadastrar.
   usuarioLogado: Usuario | null = null;
-
-  // Estados de Tarefas
   tarefas: Tarefa[] = [];
   novaTarefa: Tarefa = this.resetFormTarefa();
   editandoTarefa = false;
-
-  // Estados de Usuária
   novoUsuario: Usuario = { nome: '', email: '', senha: '' };
-
-  // Feedbacks Visuais
   mensagemErro = '';
   mensagemSucesso = '';
+  temaEscuro = false;
 
   constructor(
     private tarefaService: TarefaService,
     private usuarioService: UsuarioService
   ) {}
 
-  ngOnInit(): void {
-    // recupera a usuária ativa ao recarregar a página.
+ngOnInit(): void {
     const salvo = localStorage.getItem('usuarioLogado');
     if (salvo) {
       this.iniciarSessao(JSON.parse(salvo) as Usuario);
     }
+
+    // Isola o botão de pânico a nível de navegador puro
+    setTimeout(() => {
+      const btn = document.getElementById('btnPanico');
+      
+      // Ajuste do caminho para o padrão de assets servidos pelo build do Angular
+      const audio = new Audio('panico.mp3');
+
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation(); // Mata o evento para que não suba para o Angular
+          e.preventDefault();  // Impede qualquer comportamento padrão
+          
+          if (audio.paused) {
+            audio.play().catch(err => console.log('Erro ao tocar áudio:', err));
+          } else {
+            audio.pause();
+            audio.currentTime = 0;
+          }
+        });
+      }
+    }, 500);
   }
+  
+  alternarTema(): void {
+    this.temaEscuro = !this.temaEscuro;
+  }
+
+
 
   // --- MÉTODOS DE USUÁRIA ---
   cadastrarUsuaria(): void {
@@ -54,7 +72,6 @@ export class App implements OnInit {
       this.mensagemErro = 'Por favor, preencha todos os campos do cadastro.';
       return;
     }
-    // usa mesma regra da API (mínimo de 6 caracteres), avisando antes de enviar.
     if (this.novoUsuario.senha.length < 6) {
       this.mensagemErro = 'A senha deve ter pelo menos 6 caracteres.';
       return;
@@ -63,7 +80,6 @@ export class App implements OnInit {
     this.usuarioService.cadastrar(this.novoUsuario).subscribe({
       next: (resposta) => {
         this.novoUsuario = { nome: '', email: '', senha: '' };
-        // usa o id devolvido pela API para a usuária acessar o sistema.
         if (resposta.dados) this.iniciarSessao(resposta.dados);
         this.exibirFeedback(resposta.mensagem || 'Usuária cadastrada com sucesso!');
       },
@@ -85,7 +101,6 @@ export class App implements OnInit {
 
     this.tarefaService.getTarefasPorUsuario(this.usuarioLogado.id).subscribe({
       next: (resposta) => {
-        
         this.tarefas = resposta.dados ?? [];
         this.mensagemErro = '';
       },
@@ -98,7 +113,6 @@ export class App implements OnInit {
       this.mensagemErro = 'O título da tarefa é obrigatório.';
       return;
     }
-    // a API exige a data; antes o front mandava "" e recebia 400 sem explicação.
     if (!this.novaTarefa.dataVencimento) {
       this.mensagemErro = 'A data de vencimento é obrigatória.';
       return;
@@ -127,15 +141,11 @@ export class App implements OnInit {
 
   editarTarefa(tarefa: Tarefa): void {
     this.editandoTarefa = true;
-    // a API devolve a data com hora (2026-10-20T00:00:00), mas o
-    // <input type="date"> só aceita yyyy-MM-dd. Sem cortar, o campo ficava vazio.
     this.novaTarefa = { ...tarefa, dataVencimento: tarefa.dataVencimento.substring(0, 10) };
   }
 
-  // substitui o antigo "alternarConclusao". Agora chama o PATCH /concluir.
   concluirTarefa(tarefa: Tarefa): void {
     if (!tarefa.id) return;
-
     this.tarefaService.concluirTarefa(tarefa.id).subscribe({
       next: (resposta) => {
         this.exibirFeedback(resposta.mensagem || 'Tarefa marcada como concluída!');
@@ -169,7 +179,7 @@ export class App implements OnInit {
       descricao: '',
       dataVencimento: '',
       concluida: false,
-      usuarioId: this.usuarioLogado?.id ?? 0 // usa a usuária ativa
+      usuarioId: this.usuarioLogado?.id ?? 0
     };
   }
 
@@ -180,18 +190,13 @@ export class App implements OnInit {
     setTimeout(() => this.mensagemSucesso = '', 3500);
   }
 
-  // antes todo erro mostrava um texto genérico. Agora mostra o motivo real.
   private tratarErro(erro: HttpErrorResponse, padrao: string): void {
     this.mensagemSucesso = '';
-
     if (erro.status === 0) {
-      // Sem resposta: API desligada ou CORS/porta errada.
       this.mensagemErro = 'Não foi possível conectar com a API. Verifique se o back-end .NET está em execução.';
     } else if (erro.error?.mensagem) {
-      // Erro no formato da própria API (ApiResponse), ex.: e-mail já cadastrado.
       this.mensagemErro = erro.error.mensagem;
     } else if (erro.error?.errors) {
-      // Erro de validação automático do ASP.NET (400): { errors: { Campo: ["mensagem"] } }.
       this.mensagemErro = (Object.values(erro.error.errors) as string[][]).flat().join(' ');
     } else {
       this.mensagemErro = padrao;

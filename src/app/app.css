@@ -1,179 +1,331 @@
-body {
-  background-color:
-  #f4f6f9;
-  margin: 0;
-  font-family: system-ui, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+
+/* =========================================
+   1. CURSORES MÁGICOS 
+   ========================================= */
+* {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='20' font-size='20'%3E🪄%3C/text%3E%3C/svg%3E"), auto !important;
+  box-sizing: border-box;
 }
 
+button, .btn, input, textarea, a, .theme-toggle {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='20' font-size='20'%3E✨%3C/text%3E%3C/svg%3E"), pointer !important;
+}
+
+:host {
+  display: block;
+}
+
+/* =========================================
+   2. VARIÁVEIS DO TEMA 
+   ========================================= */
+.theme-wrapper {
+  /* TEMA CLARO: Crepúsculo da Imagem (Azul suave para pêssego) */
+  --bg-gradient: linear-gradient(180deg, #5b628f 0%, #7d7fa8 35%, #b8accb 70%, #e2d2d9 100%);
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-hover: rgba(255, 255, 255, 0.15);
+  
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  transition: all 0.5s ease;
+  padding-bottom: 50px;
+}
+
+.theme-wrapper.dark-theme {
+  /* TEMA ESCURO: Céu da Meia-Noite */
+  --bg-gradient: linear-gradient(180deg, #161625 0%, #292942 40%, #3e3a59 80%, #56485e 100%);
+  --text-main: #e0e0e0;
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================
+   3. CABEÇALHO E TIPOGRAFIA
+   ========================================= */
 .main-header {
-  background: #2c3e50;
-  padding: 15px 0;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 20px 0;
+}
+
+.nav-container, .container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .nav-container {
-  max-width: 800px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
 }
 
 .titulo {
-  font-size: 1.3rem;
-  font-weight: bold;
-}
-.container {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 0 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
-.card { background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+h2, h3 {
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* =========================================
+   4. CARDS 
+   ========================================= */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px; 
+  padding: 30px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   5. FORMULÁRIOS DELICADOS
+   ========================================= */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #4a5568;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .form-group input, .form-group textarea {
-  width: 100%; padding: 10px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  box-sizing: border-box;
+  width: 100%; 
+  padding: 12px 15px;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-main);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  transition: all 0.3s ease;
 }
 
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #ffffff;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.form-group input::placeholder, .form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* =========================================
+   6. BOTÕES MINIMALISTAS
+   ========================================= */
 .actions {
   display: flex;
   gap: 10px;
+  margin-top: 15px;
 }
 
 .btn {
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-main);
+  font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: var(--glass-hover);
+  border-color: #ffffff;
 }
 
 .btn.primary {
-  background: #3498db;
-  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
-.btn.primary:hover {
-  background: #2980b9;
-}
-
-.btn.secondary {
-  background: #64748b;
-  color: white;
-}
-
-.btn.success-outline {
-  border: 1px solid #2ecc71;
-  color: #2ecc71;
+.btn.theme-toggle {
+  border: none;
   background: transparent;
+  font-size: 1rem;
+  padding: 8px;
 }
 
-.btn.success-outline:hover {
-  background: #2ecc71;
-  color: white;
+/* =========================================
+   7. LISTA DE TAREFAS 
+   ========================================= */
+.task-list h2 {
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-.btn.info-outline {
-  border: 1px solid #f1c40f;
-  color: #f59e0b;
-  background: transparent;
-}
-
-.btn.info-outline:hover {
-  background: #f1c40f;
-  color: white;
-}
-
-.btn.danger-outline {
-  border: 1px solid #e74c3c;
-  color: #e74c3c;
-  background: transparent;
-}
-
-.btn.danger-outline:hover {
-  background: #e74c3c;
-  color: white;
-}
-
-.alert { padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-weight: 500;
-}
-
-.alert.error { background: #fee2e2;
-  color: #dc2626;
-}
-
-.alert.success {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.task-item { display: flex;
+/* Removendo o formato de "card isolado" e deixando em lista de linhas */
+.task-item {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 5px solid #f59e0b;
+  border: none;
+  border-bottom: 1px solid var(--glass-border);
+  border-radius: 0;
+  background: transparent;
+  padding: 15px 5px;
+  margin: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.task-item:last-child {
+  border-bottom: none;
 }
 
 .task-item.completed {
-  border-left-color: #10b981;
-  background: #f8fafc;
+  opacity: 0.5;
 }
 
 .task-item.completed h3 {
   text-decoration: line-through;
-  color: #94a3b8;
+}
+
+.task-content h3 { 
+  margin: 0 0 5px 0; 
+  font-size: 0.95rem; 
+  font-weight: 500;
+}
+
+.task-content p { 
+  margin: 0 0 5px 0; 
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.task-content small {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
 }
 
 .badge {
-  padding: 4px 8px;
-  font-size: 0.75rem;
-  border-radius: 50px;
-  background: #fef3c7;
-  color: #d97706;
-  font-weight: bold;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-main);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-left: 10px;
 }
 
-.badge.done {
-  background: #d1fae5;
-  color: #059669;
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.task-actions .btn {
+  padding: 6px 12px;
+  font-size: 0.65rem;
+}
+
+/* =========================================
+   8. ALERTAS E ESTADOS VAZIOS
+   ========================================= */
+.alert {
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.alert.error { 
+  background: rgba(255, 0, 0, 0.1); 
+  border: 1px solid rgba(255, 0, 0, 0.3); 
+}
+
+.alert.success { 
+  background: rgba(255, 255, 255, 0.2); 
+  border: 1px solid rgba(255, 255, 255, 0.5); 
 }
 
 .empty-state {
   text-align: center;
-  padding: 30px;
-  color: #94a3b8;
-  border: 2px dashed #cbd5e1;
+  padding: 40px 20px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px dashed var(--glass-border);
   border-radius: 8px;
 }
 
-.btn.secondary-text {
-  background: transparent;
-  color: #64748b;
-  text-decoration: none;
-  display: inline-block;
-  line-height: 20px;
+/* =========================================
+   BOTÃO DE PÂNICO
+   ========================================= */
+.btn-panico {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 23, 68, 0.15) !important; 
+  border: 1px solid rgba(255, 23, 68, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  font-size: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important;
+  transition: transform 0.2s ease, background 0.2s ease !important;
+}
+
+.btn-panico:hover {
+  transform: scale(1.1) !important;
+  background: rgba(255, 23, 68, 0.3) !important;
 }
