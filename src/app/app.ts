@@ -25,46 +25,40 @@ export class App implements OnInit {
   mensagemErro = '';
   mensagemSucesso = '';
   temaEscuro = false;
+  panicoAtivo = false;
+
+  private audioPanico = new Audio('panico.mp3');
 
   constructor(
     private tarefaService: TarefaService,
     private usuarioService: UsuarioService
   ) {}
 
-ngOnInit(): void {
+  ngOnInit(): void {
     const salvo = localStorage.getItem('usuarioLogado');
     if (salvo) {
       this.iniciarSessao(JSON.parse(salvo) as Usuario);
     }
-
-    // Isola o botão de pânico a nível de navegador puro
-    setTimeout(() => {
-      const btn = document.getElementById('btnPanico');
-      
-      // Ajuste do caminho para o padrão de assets servidos pelo build do Angular
-      const audio = new Audio('panico.mp3');
-
-      if (btn) {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation(); // Mata o evento para que não suba para o Angular
-          e.preventDefault();  // Impede qualquer comportamento padrão
-          
-          if (audio.paused) {
-            audio.play().catch(err => console.log('Erro ao tocar áudio:', err));
-          } else {
-            audio.pause();
-            audio.currentTime = 0;
-          }
-        });
-      }
-    }, 500);
   }
-  
+
+
+    togglePanico(): void {
+    this.panicoAtivo = !this.panicoAtivo;
+
+    if (this.panicoAtivo) {
+     
+      this.audioPanico.currentTime = 0;
+      this.audioPanico.play().catch(err => console.log('Erro ao tocar áudio:', err));
+    } else {
+      
+      this.audioPanico.pause();
+      this.audioPanico.currentTime = 0;
+    }
+  }
+
   alternarTema(): void {
     this.temaEscuro = !this.temaEscuro;
   }
-
-
 
   // --- MÉTODOS DE USUÁRIA ---
   cadastrarUsuaria(): void {
@@ -91,7 +85,7 @@ ngOnInit(): void {
     this.usuarioLogado = usuario;
     localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
     this.abaAtiva = 'tarefas';
-    this.limparFormTarefa(); 
+    this.limparFormTarefa();
     this.carregarTarefas();
   }
 

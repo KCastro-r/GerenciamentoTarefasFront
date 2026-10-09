@@ -311,7 +311,7 @@ h2, h3 {
   width: 55px !important;
   height: 55px !important;
   border-radius: 50% !important;
-  background: rgba(255, 23, 68, 0.15) !important; 
+  background: rgba(255, 23, 68, 0.15) !important;
   border: 1px solid rgba(255, 23, 68, 0.4) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
@@ -322,10 +322,31 @@ h2, h3 {
   z-index: 99999 !important;
   cursor: pointer !important;
   box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important;
-  transition: transform 0.2s ease, background 0.2s ease !important;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
 .btn-panico:hover {
   transform: scale(1.1) !important;
   background: rgba(255, 23, 68, 0.3) !important;
+}
+
+/* Estado ativo: azul com pombo da paz */
+.btn-panico.panico-ativo {
+  background: rgba(33, 150, 243, 0.2) !important;
+  border-color: rgba(33, 150, 243, 0.6) !important;
+  box-shadow: 0 4px 20px rgba(33, 150, 243, 0.45) !important;
+  animation: pulse-azul 2s infinite ease-in-out;
+}
+
+.btn-panico.panico-ativo:hover {
+  background: rgba(33, 150, 243, 0.35) !important;
+}
+
+@keyframes pulse-azul {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.45);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(33, 150, 243, 0.8);
+  }
 }
