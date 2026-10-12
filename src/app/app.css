@@ -350,3 +350,175 @@ h2, h3 {
     box-shadow: 0 4px 30px rgba(33, 150, 243, 0.8);
   }
 }
+
+/* =========================================
+   9. RESPONSIVIDADE MOBILE
+   ========================================= */
+@media (max-width: 768px) {
+
+  /* Container e cabeçalho */
+  .nav-container, .container {
+    padding: 0 14px;
+  }
+
+  .main-header {
+    padding: 14px 0;
+  }
+
+  .titulo {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  /* Empilha os botões do topo */
+  .nav-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .nav-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-buttons .btn {
+    padding: 8px 14px;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+  }
+
+  /* Cards com menos padding */
+  .card {
+    padding: 20px 16px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+  }
+
+  /* Títulos menores */
+  h2 { font-size: 1rem; letter-spacing: 1.5px; }
+  h3 { font-size: 0.85rem; letter-spacing: 1px; }
+
+  /* Texto "Usuária ativa" */
+  .container > div > p {
+    font-size: 0.85rem;
+  }
+
+  /* Formulários */
+  .form-group input, .form-group textarea {
+    padding: 11px 13px;
+    font-size: 0.85rem;
+  }
+
+  .form-group textarea {
+    min-height: 80px;
+  }
+
+  /* Botões de ação do form empilhados */
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .actions .btn {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.72rem;
+  }
+
+  /* Itens da lista de tarefas: empilha conteúdo e ações */
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 4px;
+  }
+
+  .task-content {
+    width: 100%;
+  }
+
+  .task-content h3 {
+    font-size: 0.9rem;
+  }
+
+  .task-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .task-actions .btn {
+    flex: 1 1 auto;
+    min-width: 80px;
+    padding: 8px 10px;
+    font-size: 0.65rem;
+  }
+
+  /* Alertas */
+  .alert {
+    font-size: 0.78rem;
+    padding: 10px 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Estado vazio */
+  .empty-state {
+    padding: 30px 14px;
+    font-size: 0.75rem;
+  }
+
+  /* Badge */
+  .badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+
+  /* Botão de pânico: um pouco menor e mais próximo da borda */
+  .btn-panico {
+    width: 50px !important;
+    height: 50px !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    font-size: 1.3rem !important;
+  }
+
+  /* Toggle de tema */
+  .btn.theme-toggle {
+    font-size: 0.9rem;
+    padding: 6px;
+  }
+}
+
+/* Ajustes extras para telas muito estreitas */
+@media (max-width: 380px) {
+
+  .titulo {
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+  }
+
+  .nav-buttons .btn {
+    padding: 7px 10px;
+    font-size: 0.62rem;
+  }
+
+  .card {
+    padding: 16px 12px;
+  }
+
+  .task-actions .btn {
+    min-width: 70px;
+    font-size: 0.6rem;
+    padding: 7px 8px;
+  }
+
+  .btn-panico {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 1.15rem !important;
+  }
+}
